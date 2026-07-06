@@ -10,12 +10,12 @@ fi
 
 ./wavy
 
-# gnuplot -persist <<-EOFMarker
-#     set title 'phase'
-#     set xlabel 'x'
-#     set ylabel 'f'
-# 	plot 'f_prof.dat' using 1:2 with lines title 'y=25%', '' using 1:3 with lines title 'y=50%', '' using 1:4 with lines title 'y=75%'
-# EOFMarker
+gnuplot -persist <<-EOFMarker
+    set title 'phase'
+    set xlabel 'x'
+    set ylabel 'f'
+	plot 'f_prof.dat' using 1:2 with lines title 'y=25%', '' using 1:3 with lines title 'y=50%', '' using 1:4 with lines title 'y=75%'
+EOFMarker
 
 gnuplot -persist <<-EOFMarker
     set title 'velocity in x'
@@ -32,6 +32,6 @@ gnuplot -persist <<-EOFMarker
 EOFMarker
 
 open f.mp4
-# open u_x.mp4
-# open p.mp4
+open u_x.mp4
+open p.mp4
 
