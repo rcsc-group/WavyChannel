@@ -165,39 +165,39 @@ event adapt (i++) {
 }
 #endif
 
-event fields(t += 0.1) {
-
-	// Name of directory for field outputs and other variables
-	char* out_dir = "fields";
-	char* spec_dir;
-	char* file_name;
-	int file_name_len;
-	FILE* fp;
-
-	// Interface positions
-	spec_dir = "interface";
-
-	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t)+1;
-	file_name = malloc(file_name_len);
-	snprintf(file_name, file_name_len, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t);
-
-	fp = fopen(file_name, "w");
-	output_facets(f, fp);
-	fclose(fp);
-
-	// Pressure field
-	spec_dir = "pressure";
-
-	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t)+1;
-	file_name = malloc(file_name_len);
-	snprintf(file_name, file_name_len, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t);
-
-	fp = fopen(file_name, "w");
-	for(double xx = 0.; xx <= length; xx += epsilon * 0.05) {
-		for(double yy = 0.; yy <= epsilon; yy += epsilon * 0.05) {
-			fprintf(fp, "%f %f %f\n", xx, yy, interpolate(p, xx, yy));
-		}
-	}
-	fclose(fp);
-
-}
+// event fields(t += 0.1) {
+//
+//	// Name of directory for field outputs and other variables
+//	char* out_dir = "fields";
+//	char* spec_dir;
+//	char* file_name;
+//	int file_name_len;
+//	FILE* fp;
+//
+//	// Interface positions
+//	spec_dir = "interface";
+//
+//	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t)+1;
+//	file_name = malloc(file_name_len);
+//	snprintf(file_name, file_name_len, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t);
+//
+//	fp = fopen(file_name, "w");
+//	output_facets(f, fp);
+//	fclose(fp);
+//
+//	// Pressure field
+//	spec_dir = "pressure";
+//
+//	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t)+1;
+//	file_name = malloc(file_name_len);
+//	snprintf(file_name, file_name_len, "%s/%s/%s-%05.2f.dat", out_dir, spec_dir, spec_dir, t);
+//
+//	fp = fopen(file_name, "w");
+//	for(double xx = 0.; xx <= length; xx += epsilon * 0.05) {
+//		for(double yy = 0.; yy <= epsilon; yy += epsilon * 0.05) {
+//			fprintf(fp, "%f %f %f\n", xx, yy, interpolate(p, xx, yy));
+//		}
+//	}
+//	fclose(fp);
+//
+//}
