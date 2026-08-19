@@ -16,7 +16,7 @@ For the outputs, ensure you have the following folder structure to allow all out
     └── pressure/
 ```
 
-If there is an error pertaining to `virtual.h`, you may need to edit lines 26 and 27 of `grid/tree.h` from
+If there is an error pertaining to `virtual.h` on compilation, you may need to edit lines 26 and 27 of `grid/tree.h` from
 ```c
 //#include "memindex/range.h"
 #include "memindex/virtual.h"
