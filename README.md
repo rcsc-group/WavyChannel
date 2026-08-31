@@ -7,7 +7,7 @@ For the outputs, ensure you have the following folder structure to allow all out
 <repo>/
 ├── EBM_VOF/
 ├── output-mpi.h
-├── wavy-mpi.c
+├── wavy.c
 ├── mpirun-wavy.sh
 └── fields/
     ├── interface/
