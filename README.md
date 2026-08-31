@@ -1,6 +1,6 @@
 ## Running the simulation
 
-The most recent version of the code is in `wavy-mpi.c`. To run, call `./mpirun-wavy.sh <npe>`, where `<npe>` is the number of desired MPI processes.
+The most recent version of the code is in `wavy.c`. To run, call `./mpirun-wavy.sh <npe>`, where `<npe>` is the number of desired MPI processes. For serial, call only `./run-wavy.c`.
 
 For the outputs, ensure you have the following folder structure to allow all outputs to be correctly saved (otherwise there will be an error):
 ```text
@@ -9,6 +9,7 @@ For the outputs, ensure you have the following folder structure to allow all out
 ├── output-mpi.h
 ├── wavy.c
 ├── mpirun-wavy.sh
+├── run-wavy.sh
 └── fields/
     ├── interface/
     ├── level/
