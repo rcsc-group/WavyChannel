@@ -31,9 +31,10 @@
 // #define sig			0.035		// Surface tension between phases (kg/s^2) (oil-air)
 #define sig			0.035		// Surface tension between phases (kg/s^2) (oil-water)
 
-#define p_in		1.e5		// Atmospheric pressure at inlet
-#define p_out		1.e5		// Atmospheric pressure at outlet
+#define p_in		1.e5		// Atmospheric pressure at inlet (Pa)
+#define p_out		1.e5		// Atmospheric pressure at outlet (Pa)
 
+#define t_end		100.		// End time of simulation (s)
 
 ////// Dimensioned scales
 #define L_ref		0.1			// Reference length of channel
@@ -55,9 +56,11 @@
 double thetac		= 60.;							// Contact angle in degrees
 #define thetar		(thetac*pi/180.)				// Contact angle in degrees
 
+#define t1			(t/T_ref)						// Dimensionless time units
+#define t1_end		(t_end/T_ref)					// Dimensionless end time
 
-// Simulation time
-double t_end = 100.0;
+#define growth		(2*L_ref*(cos(thetar)/sig + (p_in-p_out)/R_ref)/3)	// Dimensionless leading-order growth rate
+#define p_jump		(cos(thetar))										// Dimensionless leading-order pressure jump over interface
 
 vector tmp_h[], o_interface[], ncc[], hnew1[];
 double csTL = max(1.e-2, VFTL);
@@ -114,14 +117,20 @@ int main() {
 	// TOLERANCE = 1.e-4;
 
 	fprintf(stdout, "\n\nMax level: %2d\nMin level: %2d\n", MAX_LEVEL, MIN_LEVEL);
+	
 	fprintf(stdout, "\nReynolds: %0.9g\n", Re);
 	fprintf(stdout, "epsReynolds: %0.9g\n", eps*Re);
 	fprintf(stdout, "Capillary: %0.9g\n", Ca);
 	fprintf(stdout, "Density ratio: %0.9g\n", rhoRatio);
 	fprintf(stdout, "Viscosity ratio: %0.9g\n", muRatio);
-	fprintf(stdout, "Velocity scale: %0.9g\n", U_ref);
+
+	fprintf(stdout, "\nVelocity scale: %0.9g\n", U_ref);
 	fprintf(stdout, "Time scale: %0.9g\n", T_ref);
 	fprintf(stdout, "Pressure scale: %0.9g\n", P_ref);
+	
+	fprintf(stdout, "\nDimensionless final time: %0.9g\n", t1_end);
+	fprintf(stdout, "Leading-order growth rate: %0.9g\n", growth);
+	fprintf(stdout, "Leading-order pressure jump: %0.9g\n", p_jump);
 
 	fprintf(stderr, "\n%6s %8s %9s ;; %9s %9s ;; %5s %5s %7s\n", "i", "t", "L^2 norm", "Wall time", "CPU time", "mgu.i", "mgp.i", "N");
 	init_grid(1 << MAX_LEVEL);
@@ -133,7 +142,7 @@ int main() {
 
 
 
-event init(t=0) {
+event init(t = 0) {
 	solid(cs, fs, (1. + eps*sin(8 * pi * eps * x)) - y);
 	// solid(cs, fs, 1.e-6 + 1. - y);
 	cleansmallcell(cs, fs, csTL);
@@ -150,12 +159,12 @@ event init(t=0) {
 	}
 }
 
-event early_end(i++, t <= t_end) {
+event early_end(i++, t1 <= t1_end) {
 	double xx = epsInv - 0.1;
 	double dyy = 0.1;
 	for (double yy = dyy; yy <= 2; yy += dyy) {
 		if (interpolate(cs, xx, yy) * interpolate(f, xx, yy) > 1e-2) {
-			fprintf(stderr, "Fluid has reached end of channel at time t = %g\n", t);
+			fprintf(stderr, "Fluid has reached end of channel at time t = %g\n", t1);
 			return 1;
 		}
 	}
@@ -168,10 +177,10 @@ event logfile(i += 100) {
 		n_cells += 1;
 	}
 	timing s = timer_timing(perf.gt, i, perf.tnc, NULL);
-	fprintf(stderr, "%06d %8.4g %9.5g ;; %9.7g %9.7g ;; %5d %5d %7d\n", i, t, normf(u.x).rms, s.real, s.cpu, mgu.i, mgp.i, n_cells);
+	fprintf(stderr, "%06d %8.4g %9.5g ;; %9.7g %9.7g ;; %5d %5d %7d\n", i, t1, normf(u.x).rms, s.real, s.cpu, mgu.i, mgp.i, n_cells);
 }
 
-event images(t += 0.01) {
+event images(t += 20*T_ref) {
 	scalar u_r[], l[];
 	foreach() {
 		u_r[] = sqrt(sq(u.x[]) + sq(u.y[]));
@@ -236,7 +245,7 @@ event adapt (i++) {
 }
 #endif
 
-event fields(t = 0.; t += 0.01) {
+event fields(t += 2*T_ref) {
 
 	// Name of directory for field outputs and other variables
 	char* out_dir = "fields";
@@ -248,9 +257,9 @@ event fields(t = 0.; t += 0.01) {
 	// Interface positions
 	spec_dir = "interface";
 
-	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.6f.dat", out_dir, spec_dir, spec_dir, t)+1;
+	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.3f.dat", out_dir, spec_dir, spec_dir, t1)+1;
 	file_name = malloc(file_name_len);
-	snprintf(file_name, file_name_len, "%s/%s/%s-%09.6f.dat", out_dir, spec_dir, spec_dir, t);
+	snprintf(file_name, file_name_len, "%s/%s/%s-%09.3f.dat", out_dir, spec_dir, spec_dir, t1);
 
 	// fp = fopen(file_name, "w");
 	// output_facets(f, fp);
@@ -260,9 +269,9 @@ event fields(t = 0.; t += 0.01) {
 	// Pressure field
 	spec_dir = "pressure";
 
-	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.6f.dat", out_dir, spec_dir, spec_dir, t)+1;
+	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.3f.dat", out_dir, spec_dir, spec_dir, t1)+1;
 	file_name = malloc(file_name_len);
-	snprintf(file_name, file_name_len, "%s/%s/%s-%09.6f.dat", out_dir, spec_dir, spec_dir, t);
+	snprintf(file_name, file_name_len, "%s/%s/%s-%09.3f.dat", out_dir, spec_dir, spec_dir, t1);
 
 	fp = fopen(file_name, "w");
 
@@ -280,7 +289,7 @@ event fields(t = 0.; t += 0.01) {
 
 }
 
-event status(t += 0.1) {
+event status(t += 20*T_ref) {
 
 	// Name of directory for field outputs and other variables
 	char* out_dir = "fields";
@@ -292,9 +301,9 @@ event status(t += 0.1) {
 	// Phase field
 	spec_dir = "phase";
 
-	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.6f.png", out_dir, spec_dir, spec_dir, t)+1;
+	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.3f.png", out_dir, spec_dir, spec_dir, t1)+1;
 	file_name = malloc(file_name_len);
-	snprintf(file_name, file_name_len, "%s/%s/%s-%09.6f.png", out_dir, spec_dir, spec_dir, t);
+	snprintf(file_name, file_name_len, "%s/%s/%s-%09.3f.png", out_dir, spec_dir, spec_dir, t1);
 
 	fp = fopen(file_name, "w");
 	output_ppm(f, fp = fp, spread=-1, box={{0.,0.}, {epsInv,2}});
@@ -308,9 +317,9 @@ event status(t += 0.1) {
 	// Mesh level
 	spec_dir = "level";
 
-	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.6f.png", out_dir, spec_dir, spec_dir, t)+1;
+	file_name_len = snprintf(NULL, 0, "%s/%s/%s-%09.3f.png", out_dir, spec_dir, spec_dir, t1)+1;
 	file_name = malloc(file_name_len);
-	snprintf(file_name, file_name_len, "%s/%s/%s-%09.6f.png", out_dir, spec_dir, spec_dir, t);
+	snprintf(file_name, file_name_len, "%s/%s/%s-%09.3f.png", out_dir, spec_dir, spec_dir, t1);
 
 	fp = fopen(file_name, "w");
 	output_ppm(l, fp = fp, spread=-1, box={{0.,0.}, {epsInv,2}});
