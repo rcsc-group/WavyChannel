@@ -9,5 +9,5 @@ python3 -m venv postpro
 source postpro/bin/activate
 
 echo "Installing packages..."
-pip3 install numpy scipy pandas matplotlib jupyterlab ipykernel
+pip3 install numpy scipy pandas matplotlib
 deactivate

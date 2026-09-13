@@ -8,7 +8,7 @@
 #include "output-mpi.h"
 
 ////// Mesh size variable
-#define MESH_LEVEL	7
+#define MESH_LEVEL	8
 
 ////// Dimensional quanities
 #define rhoLeft		1000.		// Density of left  phase (kg/m^3)
