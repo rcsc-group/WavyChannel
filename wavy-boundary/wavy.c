@@ -168,12 +168,12 @@ event images(t += 10.*t_spacing*T_ref) {
 		l[] = level;
 	}
 
-	output_ppm(u_r, file = "movies/movie-u.mp4",   box={{0.,0.}, {epsInv,2}});
-	output_ppm(u.x, file = "movies/movie-u_x.mp4", box={{0.,0.}, {epsInv,2}});
-	output_ppm(u.y, file = "movies/movie-u_y.mp4", box={{0.,0.}, {epsInv,2}});
-	output_ppm(f,   file = "movies/movie-f.mp4",   box={{0.,0.}, {epsInv,2}});
-	output_ppm(p,   file = "movies/movie-p.mp4",   box={{0.,0.}, {epsInv,2}});
-	output_ppm(l,   file = "movies/movie-l.mp4",   box={{0.,0.}, {epsInv,2}});
+	output_ppm(u_r, file = "movies/movie-u.mp4",   box={{0.,0.}, {epsInv,6.}});
+	output_ppm(u.x, file = "movies/movie-u_x.mp4", box={{0.,0.}, {epsInv,6.}});
+	output_ppm(u.y, file = "movies/movie-u_y.mp4", box={{0.,0.}, {epsInv,6.}});
+	output_ppm(f,   file = "movies/movie-f.mp4",   box={{0.,0.}, {epsInv,6.}});
+	output_ppm(p,   file = "movies/movie-p.mp4",   box={{0.,0.}, {epsInv,6.}});
+	output_ppm(l,   file = "movies/movie-l.mp4",   box={{0.,0.}, {epsInv,6.}});
 	
 	// Nice video of the fluids, with pressure shown in the top half and horizontal velocity in the bottom half
 	clear();
