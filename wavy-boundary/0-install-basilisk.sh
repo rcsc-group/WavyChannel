@@ -17,5 +17,5 @@ echo 'export PATH=$PATH:$BASILISK' >> ~/.bashrc
 echo "Installing additional packages..."
 sudo apt install imagemagick ffmpeg
 
-echo "Removing tar..."
+echo "Removing tarball..."
 rm basilisk.tar.gz

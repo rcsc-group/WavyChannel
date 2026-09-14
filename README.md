@@ -25,6 +25,7 @@ You may also require FFmpeg and ImageMagick. To install these, simply type
 ```
 sudo apt install imagemagick ffmpeg
 ```
+The tarball can now be removed.
 
 ## Preparing directories
 
