@@ -34,7 +34,7 @@ qcc --version
 ```
 If instead you get an error message, consult the installation instructions at the link above.
 
-Now, run the script `1-create-directories.sh`. This will create the `interface` and `movies` directories for interfacial and field data respectively to be saved into. Furthermore, this sets up the virtual environment `postpro` for the Python postprocessing, and installs the required packages. In particular, these are
+Now, run the script `1-create-directories.sh`. This will create the `interface` and `movies` directories for interfacial and field data respectively to be saved into, if they do not exist already. Furthermore, this sets up the virtual environment `postpro` for the Python postprocessing, and installs the required Python libraries. In particular, these are
  - NumPy,
  - SciPy,
  - Pandas,
@@ -76,3 +76,5 @@ to
 The postprocessing can now be run with the script `3-postprocessing.sh`. This calculates the fitted growth rate and uncertainty in the fit of the growth rate, outputting these to the terminal. A plot showing interface position with time, the fitted position, and the scaled residuals for late times is also saved to the file `img-growth-rate.pdf`.
 
 If additional precision is required in the fitted growth rate, this can be done by changing lines 47 and 48 of `postprocessing.py`.
+
+If the Basilisk code is unable to run, precomputed data is also provided in the `interfaces` folder.
