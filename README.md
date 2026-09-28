@@ -1,3 +1,7 @@
+# Wavy Channel Imbibition
+
+This repository holds a DNS code infrastructure for the computational modelling of fluid imbibition into a two-dimensional channel with non-flat walls. The infrastructure is designed to complement asymptotic modelling of this problem.
+
 ## Installation of Basilisk
 
 This section is only required if you do not already have Basilisk installed on your machine.
